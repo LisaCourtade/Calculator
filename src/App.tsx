@@ -4,6 +4,7 @@ import './App.css';
 interface Operation {
   value: number;
   action?: Action;
+  bracket?: Bracket;
 }
 
 const enum Action {
@@ -12,6 +13,11 @@ const enum Action {
   MULTIPLY = 'x',
   DIVIDE = '/',
   DOT = '.',
+}
+
+const enum Bracket {
+  OPEN = '(',
+  CLOSE = ')',
 }
 
 function add(num1: number, num2: number): number {
@@ -42,6 +48,23 @@ const actionToFunction = {
   [Action.DOT]: dot,
 }
 
+function open(curr: Operation, next: Operation): number {
+  let result = 0;
+  if (curr.action) {
+    result = actionToFunction[curr.action](curr.value, next.value);
+  }
+  return result ;
+}
+
+function close() {
+
+}
+
+const bracketFunction = {
+  [Bracket.OPEN]: open,
+  [Bracket.CLOSE]: close,
+}
+
 function App(): JSX.Element {
   // Calculator's state ( user's query )
   const [value, setValue] = useState<Operation[]>([{ value: 0 }]);
@@ -54,6 +77,15 @@ function App(): JSX.Element {
     lastEl.value = Number(`${lastEl.value}` + `${val}`);
     // 3) Set new value
     setValue([...value]);
+  }
+
+  const handleBracketClick = (e: React.MouseEvent<HTMLDivElement>, bracket: Bracket): void=> {
+    e.preventDefault();
+    setValue(prev => {
+      const lastEl = prev[prev.length-1];
+      lastEl.bracket = bracket;
+      return [...prev];
+    })
   }
 
   const handleActionClick = (e: React.MouseEvent<HTMLDivElement>, action: Action): void => {
@@ -71,6 +103,21 @@ function App(): JSX.Element {
   const handleEqualClick = (e: React.MouseEvent<HTMLDivElement>): void => {
     e.preventDefault();
     const copy = [...value];
+    for (let i = 0; i < copy.length; i++) {
+      let inBracket = false;
+      if (copy[i].bracket === Bracket.OPEN ) {
+        inBracket = true;
+      }
+      for (let k = i; inBracket && k !== copy.length-1; k++) {
+          let bracketResult = bracketFunction[Bracket.OPEN](copy[k], copy[k+1]);
+          copy[k+1].value = bracketResult;
+          copy.splice(k, 1);
+          k--;
+          if (copy[k+1].bracket && copy[k+1].bracket === Bracket.CLOSE) {
+            inBracket = false;
+          }
+      }
+    }
     for (let i = 0; i < copy.length; i++) {
       const currentAction = copy[i].action;
       if (currentAction === Action.MULTIPLY || currentAction === Action.DIVIDE) {
@@ -94,10 +141,25 @@ function App(): JSX.Element {
   const printCurrentValue = (): string => {
     let stringValue = ``;
     for(let i = 0; i < value.length; i++) {
-      stringValue += `${value[i].value}`;
-      if (value[i].action) {
-        stringValue += `${value[i].action}`;
+      if (value[i].bracket === Bracket.OPEN) {
+        stringValue += value[i].bracket;
+        stringValue += `${value[i].value}`;
+        if (value[i].action) {
+          stringValue += `${value[i].action}`;
+        }
+      } else if (value[i].bracket === Bracket.CLOSE) {
+        stringValue += `${value[i].value}`;
+        stringValue += value[i].bracket;
+        if (value[i].action) {
+          stringValue += `${value[i].action}`;
+        }
+      } else {
+        stringValue += `${value[i].value}`;
+        if (value[i].action) {
+          stringValue += `${value[i].action}`;
+        }
       }
+      
     }
     return stringValue;
   }
@@ -110,8 +172,8 @@ function App(): JSX.Element {
         <div className="all-buttons">
           <div className="row">
             <div className="button light-grey" onClick={() => {setValue([{value: 0}])}}>C</div>
-            <div className="button light-grey">+/-</div>
-            <div className="button light-grey">%</div>
+            <div className="button light-grey" onClick={e => handleBracketClick(e, Bracket.OPEN)}>(</div>
+            <div className="button light-grey" onClick={e => handleBracketClick(e, Bracket.CLOSE)}>)</div>
             <div className="button orange" onClick={e => handleActionClick(e, Action.DIVIDE)}>/</div>
           </div>
           <div className="row">
