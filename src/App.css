@@ -1,55 +1,78 @@
+* {
+  font-family: arial;
+}
+
 .calculator {
-    background-color: #000000;
-    color: white;
-    width: min-content;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 4px;
+  background-color: #000000;
+  color: white;
+  width: min-content;
+  max-width: 200px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 4px;
+  border-radius: 6px;
 }
 
 .result-screen {
-    height: 120px;
-    font-size: 44px;
-    display: flex;
-    justify-content: flex-end;
-    align-items: flex-end;
-    margin-right: 4px;
+  height: 120px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  overflow-wrap: anywhere;
+  margin: 0 4px 4px 4px;
 }
 
+.screen-digit {
+  height: min-content;
+}
+
+.normal-overflow {
+  font-size: 44px;
+}
+
+.small-overflow {
+  font-size: 32px;
+}
+
+.medium-overflow {
+  font-size: 22px;
+}
+
+.big-overflow {
+  font-size: 22px;
+  overflow-y: scroll;
+}
 
 .all-buttons {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .row {
-    display: flex;
+  display: flex;
 }
 
 .button {
-    background-color: #333333;
-    border-radius: 50%;
-    width: 42px;
-    height: 42px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 4px;
-    cursor: pointer;
+  background-color: #333333;
+  font-size: 20px;
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 4px;
+  cursor: pointer;
 }
 
-/* .zero {
-    width: 84px;
-    border-radius: 32%;
-} */
-
 .light-grey {
-    background-color: #A6A6A6;
-    color: #000000;
+  background-color: #a6a6a6;
+  color: #000000;
 }
 
 .orange {
-    background-color: #FE9500;
+  background-color: #fe9500;
 }
