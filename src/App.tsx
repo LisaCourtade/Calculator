@@ -5,27 +5,27 @@ import Keyboard from "./components/Keyboard";
 import Screen from "./components/Screen";
 
 function App(): JSX.Element {
-  const [value, setValue] = useState<Operation[]>([{ value: 0 }]);
+  const [value, setValue] = useState<Operation[]>([{ value: "" }]);
 
   const printCurrentValue = (): string => {
-    let stringValue = ``;
+    let stringValue = "";
     for (let i = 0; i < value.length; i++) {
       if (value[i].bracket === Bracket.OPEN) {
         stringValue += value[i].bracket;
-        stringValue += `${value[i].value}`;
+        stringValue += value[i].value;
         if (value[i].action) {
-          stringValue += `${value[i].action}`;
+          stringValue += value[i].action;
         }
       } else if (value[i].bracket === Bracket.CLOSE) {
-        stringValue += `${value[i].value}`;
+        stringValue += value[i].value;
         stringValue += value[i].bracket;
         if (value[i].action) {
-          stringValue += `${value[i].action}`;
+          stringValue += value[i].action;
         }
       } else {
-        stringValue += `${value[i].value}`;
+        stringValue += value[i].value;
         if (value[i].action) {
-          stringValue += `${value[i].action}`;
+          stringValue += value[i].action;
         }
       }
     }

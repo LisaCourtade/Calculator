@@ -1,5 +1,5 @@
 export interface Operation {
-    value: number;
+    value: string;
     action?: Action;
     bracket?: Bracket;
 }

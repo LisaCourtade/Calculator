@@ -41,7 +41,11 @@ export default function Screen({ printCurrentValue, value }: ScreenProps) {
       setOverflow(screenArea - valueArea);
     }
     //value decrease
-    if (value.length <= 1) {
+    if (value.length === 1 || (value.length === 2 && value[1].value === "0")) {
+      if (`${value[0].value}`.length > 8) {
+        setOverflow(-1000);
+        return;
+      }
       if (screenArea - valueArea < 0) {
         setOverflow(screenArea - valueArea);
       } else {
@@ -62,9 +66,13 @@ export default function Screen({ printCurrentValue, value }: ScreenProps) {
       ref={screenRef}
       className={`result-screen ${getOverflowClassName(overflow)}`}
     >
-      {splitCurrentValue(printCurrentValue()).map((value) => {
-        return <div className="screen-digit">{value}</div>;
-      })}
+      {printCurrentValue() === "" ? (
+        <div className="screen-digit">0</div>
+      ) : (
+        splitCurrentValue(printCurrentValue()).map((value) => {
+          return <div className="screen-digit">{value}</div>;
+        })
+      )}
     </div>
   );
 }
