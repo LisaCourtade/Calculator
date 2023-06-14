@@ -51,6 +51,10 @@
   flex-direction: column;
 }
 
+.all-buttons:focus {
+  outline: none;
+}
+
 .row {
   display: flex;
 }

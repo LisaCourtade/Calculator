@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Action, Operation, Bracket } from "../types";
 
 function add(num1: string, num2: string): number {
@@ -55,11 +55,8 @@ export default function Keyboard({ value, setValue }: KeyBoardProps) {
     val: number
   ): void => {
     e.preventDefault();
-    // 1) Get last element in the `value` array
     const lastEl = value[value.length - 1];
-    // 2) Append new digit to the value field of the object
     lastEl.value = `${lastEl.value}${val}`;
-    // 3) Set new value
     setValue([...value]);
   };
 
@@ -100,8 +97,57 @@ export default function Keyboard({ value, setValue }: KeyBoardProps) {
     });
   };
 
-  const handleEqualClick = (e: React.MouseEvent<HTMLDivElement>): void => {
-    e.preventDefault();
+  const handleKeyboardEvent = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+    const operators = [".", "+", "-", "*", "/"];
+    const lastEl = value[value.length - 1];
+
+    if (numbers.includes(e.key)) {
+      lastEl.value = lastEl.value + e.key;
+      setValue([...value]);
+    } else if (operators.includes(e.key)) {
+      // Check if it's already a float number
+      if (
+        e.key === Action.DOT &&
+        value.length > 1 &&
+        value[value.length - 2].action === Action.DOT
+      ) {
+        return;
+      }
+      // Check if it's a leading dot
+      if (e.key === Action.DOT && lastEl.value === "") {
+        lastEl.value = "0";
+      }
+      // Assign Action
+      switch (e.key) {
+        case ".":
+          lastEl.action = Action.DOT;
+          break;
+        case "+":
+          lastEl.action = Action.ADD;
+          break;
+        case "-":
+          lastEl.action = Action.MINUS;
+          break;
+        case "*":
+          lastEl.action = Action.MULTIPLY;
+          break;
+        case "/":
+          lastEl.action = Action.DIVIDE;
+          break;
+      }
+      setValue([...value, { value: "" }]);
+    } else if (e.key === "Enter" || e.key === "=") {
+      handleEqual();
+    } else if (e.key === "Delete") {
+      handleDelete();
+    }
+  };
+
+  const handleEqual = (e?: React.MouseEvent<HTMLDivElement>): void => {
+    if (e) {
+      e.preventDefault();
+    }
     const copy = [...value];
     for (let i = 0; i < copy.length; i++) {
       let inBracket = false;
@@ -162,37 +208,45 @@ export default function Keyboard({ value, setValue }: KeyBoardProps) {
     setValue(result);
   };
 
+  const handleDelete = () => {
+    setValue([{ value: "" }]);
+  };
+
+  useEffect(() => {
+    (document.querySelector('.all-buttons') as HTMLDivElement).focus();
+  }, []);
+
   return (
-    <div className="all-buttons">
-    <div className="row">
-      <div className="button light-grey" onClick={() => {setValue([{value: ''}])}}>C</div>
-      <div className="button light-grey" onClick={e => handleBracketClick(e, Bracket.OPEN)}>(</div>
-      <div className="button light-grey" onClick={e => handleBracketClick(e, Bracket.CLOSE)}>)</div>
-      <div className="button orange" onClick={e => handleActionClick(e, Action.DIVIDE)}>/</div>
+    <div className="all-buttons" onKeyDown={handleKeyboardEvent} tabIndex={1}>
+      <div className="row">
+        <div className="button light-grey" onClick={() => handleDelete}>C</div>
+        <div className="button light-grey" onClick={e => handleBracketClick(e, Bracket.OPEN)}>(</div>
+        <div className="button light-grey" onClick={e => handleBracketClick(e, Bracket.CLOSE)}>)</div>
+        <div className="button orange" onClick={e => handleActionClick(e, Action.DIVIDE)}>/</div>
+      </div>
+      <div className="row">
+        <div className="button" onClick={e => handleDigitClick(e, 7)}>7</div>
+        <div className="button" onClick={e => handleDigitClick(e, 8)}>8</div>
+        <div className="button" onClick={e => handleDigitClick(e, 9)}>9</div>
+        <div className="button orange" onClick={e => handleActionClick(e, Action.MULTIPLY)}>x</div>
+      </div>
+      <div className="row">
+        <div className="button" onClick={e => handleDigitClick(e, 4)}>4</div>
+        <div className="button" onClick={e => handleDigitClick(e, 5)}>5</div>
+        <div className="button" onClick={e => handleDigitClick(e, 6)}>6</div>
+        <div className="button orange" onClick={e => handleActionClick(e, Action.MINUS)}>-</div>
+      </div>
+      <div className="row">
+        <div className="button" onClick={e => handleDigitClick(e, 1)}>1</div>
+        <div className="button" onClick={e => handleDigitClick(e, 2)}>2</div>
+        <div className="button" onClick={e => handleDigitClick(e, 3)}>3</div>
+        <div className="button orange" onClick={e => handleActionClick(e, Action.ADD)}>+</div>
+      </div>
+      <div className="row">
+        <div className="button zero" onClick={e => handleDigitClick(e, 0)}>0</div>
+        <div className="button" onClick={e => handleActionClick(e, Action.DOT)}>.</div>
+        <div className="button orange" onClick={e => handleEqual(e)}>=</div>
+      </div>
     </div>
-    <div className="row">
-      <div className="button" onClick={e => handleDigitClick(e, 7)}>7</div>
-      <div className="button" onClick={e => handleDigitClick(e, 8)}>8</div>
-      <div className="button" onClick={e => handleDigitClick(e, 9)}>9</div>
-      <div className="button orange" onClick={e => handleActionClick(e, Action.MULTIPLY)}>x</div>
-    </div>
-    <div className="row">
-      <div className="button" onClick={e => handleDigitClick(e, 4)}>4</div>
-      <div className="button" onClick={e => handleDigitClick(e, 5)}>5</div>
-      <div className="button" onClick={e => handleDigitClick(e, 6)}>6</div>
-      <div className="button orange" onClick={e => handleActionClick(e, Action.MINUS)}>-</div>
-    </div>
-    <div className="row">
-      <div className="button" onClick={e => handleDigitClick(e, 1)}>1</div>
-      <div className="button" onClick={e => handleDigitClick(e, 2)}>2</div>
-      <div className="button" onClick={e => handleDigitClick(e, 3)}>3</div>
-      <div className="button orange" onClick={e => handleActionClick(e, Action.ADD)}>+</div>
-    </div>
-    <div className="row">
-      <div className="button zero" onClick={e => handleDigitClick(e, 0)}>0</div>
-      <div className="button" onClick={e => handleActionClick(e, Action.DOT)}>.</div>
-      <div className="button orange" onClick={e => handleEqualClick(e)}>=</div>
-    </div>
-  </div>
   );
 }
