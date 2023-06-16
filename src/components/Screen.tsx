@@ -40,30 +40,25 @@ export default function Screen({ printCurrentValue, value }: ScreenProps) {
     if (screenArea - valueArea < 0) {
       if (valueArea >= 28000 && valueArea <= 30000) {
         if (screenRef.current?.classList.contains("small-overflow")) {
-          console.log("small = medium")
           screenRef.current?.classList.remove("small-overflow");
           screenRef.current?.classList.add("medium-overflow");
           return;
         } else if (screenRef.current?.classList.contains("medium-overflow")) {
-          console.log("medium = big")
           screenRef.current?.classList.remove("medium-overflow");
           screenRef.current?.classList.add("big-overflow");
           return;
         } 
       }
       setOverflow(screenArea - valueArea);
-      console.log("set overflow")
     }
 
     //value decrease
     if (value.length === 1 || (value.length === 2 && value[1].value === "0")) {
       if (`${value[0].value}`.length > 6) {
-        console.log("decrease small")
         setOverflow(-1000);
         return;
       }
       if (screenArea - valueArea < 0) {
-        console.log("decrease with overflow")
         setOverflow(screenArea - valueArea);
       } else {
         setOverflow(0);
@@ -75,7 +70,6 @@ export default function Screen({ printCurrentValue, value }: ScreenProps) {
       screenRef.current.scrollTop = screenRef.current.scrollHeight - screenRef.current.clientHeight;  
     }
 
-    console.log(screenArea, valueArea, overflow)
   }, [
     screenRef.current?.scrollHeight,
     screenRef.current?.clientHeight,
