@@ -2,6 +2,10 @@
   font-family: arial;
 }
 
+body {
+  background-color:#0f0d0d;
+}
+
 .calculator {
   background-color: #000000;
   color: white;
@@ -11,18 +15,45 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  padding: 4px;
-  border-radius: 6px;
+  padding: 10px;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 
 .result-screen {
-  height: 120px;
+  height: 150px;
   display: flex;
   justify-content: flex-end;
   align-items: flex-end;
   flex-wrap: wrap;
   overflow-wrap: anywhere;
-  margin: 0 4px 4px 4px;
+  margin: 4px;
+  padding-right: 4px;
+}
+
+.result-screen::-webkit-scrollbar {
+  width: 10px; 
+}
+
+.result-screen::-webkit-scrollbar-track {
+  background-color: #000000;
+}
+
+.result-screen::-webkit-scrollbar-thumb {
+  background: #424141;
+  border-radius: 4px;
+}
+
+.result-screen::-webkit-scrollbar-thumb:hover {
+  background: #fe9500;
+  border-radius: 4px;
+}
+
+.result-screen::-webkit-scrollbar-thumb:active {
+  background: #fe9500;
+  border-radius: 4px;
 }
 
 .screen-digit {
@@ -31,14 +62,17 @@
 
 .normal-overflow {
   font-size: 44px;
+  align-content: flex-end;
 }
 
 .small-overflow {
   font-size: 32px;
+  align-content: flex-end;
 }
 
 .medium-overflow {
   font-size: 22px;
+  align-content: flex-end;
 }
 
 .big-overflow {
@@ -64,6 +98,19 @@
   font-size: 20px;
   border-radius: 50%;
   width: 42px;
+  height: 42px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 4px;
+  cursor: pointer;
+}
+
+.zero {
+  background-color: #333333;
+  font-size: 20px;
+  border-radius: 50px;
+  width: 92px;
   height: 42px;
   display: flex;
   justify-content: center;

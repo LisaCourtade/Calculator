@@ -219,7 +219,7 @@ export default function Keyboard({ value, setValue }: KeyBoardProps) {
   return (
     <div className="all-buttons" onKeyDown={handleKeyboardEvent} tabIndex={1}>
       <div className="row">
-        <div className="button light-grey" onClick={() => handleDelete}>C</div>
+        <div className="button light-grey" onClick={() => handleDelete()}>C</div>
         <div className="button light-grey" onClick={e => handleBracketClick(e, Bracket.OPEN)}>(</div>
         <div className="button light-grey" onClick={e => handleBracketClick(e, Bracket.CLOSE)}>)</div>
         <div className="button orange" onClick={e => handleActionClick(e, Action.DIVIDE)}>/</div>
@@ -243,7 +243,7 @@ export default function Keyboard({ value, setValue }: KeyBoardProps) {
         <div className="button orange" onClick={e => handleActionClick(e, Action.ADD)}>+</div>
       </div>
       <div className="row">
-        <div className="button zero" onClick={e => handleDigitClick(e, 0)}>0</div>
+        <div className="zero" onClick={e => handleDigitClick(e, 0)}>0</div>
         <div className="button" onClick={e => handleActionClick(e, Action.DOT)}>.</div>
         <div className="button orange" onClick={e => handleEqual(e)}>=</div>
       </div>

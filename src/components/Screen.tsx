@@ -33,26 +33,49 @@ export default function Screen({ printCurrentValue, value }: ScreenProps) {
     if (previousValue === value) {
       return;
     }
-    const screenArea = 104 * 196;
+    const screenArea = screenRef.current ? screenRef.current.clientHeight * screenRef.current.clientWidth : 150 * 192;
     const valueArea = getArea(screenRef);
 
     //value increase
     if (screenArea - valueArea < 0) {
+      if (valueArea >= 28000 && valueArea <= 30000) {
+        if (screenRef.current?.classList.contains("small-overflow")) {
+          console.log("small = medium")
+          screenRef.current?.classList.remove("small-overflow");
+          screenRef.current?.classList.add("medium-overflow");
+          return;
+        } else if (screenRef.current?.classList.contains("medium-overflow")) {
+          console.log("medium = big")
+          screenRef.current?.classList.remove("medium-overflow");
+          screenRef.current?.classList.add("big-overflow");
+          return;
+        } 
+      }
       setOverflow(screenArea - valueArea);
+      console.log("set overflow")
     }
+
     //value decrease
     if (value.length === 1 || (value.length === 2 && value[1].value === "0")) {
-      if (`${value[0].value}`.length > 8) {
+      if (`${value[0].value}`.length > 6) {
+        console.log("decrease small")
         setOverflow(-1000);
         return;
       }
       if (screenArea - valueArea < 0) {
+        console.log("decrease with overflow")
         setOverflow(screenArea - valueArea);
       } else {
         setOverflow(0);
       }
     }
     setPreviousValue(value);
+
+    if (screenRef.current?.scrollHeight) {
+      screenRef.current.scrollTop = screenRef.current.scrollHeight - screenRef.current.clientHeight;  
+    }
+
+    console.log(screenArea, valueArea, overflow)
   }, [
     screenRef.current?.scrollHeight,
     screenRef.current?.clientHeight,
@@ -78,19 +101,15 @@ export default function Screen({ printCurrentValue, value }: ScreenProps) {
 }
 
 function getOverflowClassName(overflow: number): string {
-  if (overflow > 0) {
-    return "normal-overflow";
-  }
-
   if (overflow < 0 && overflow > -1000) {
     return "small-overflow";
   }
 
-  if (overflow < -999 && overflow > -3000) {
+  if (overflow <= -1000 && overflow > -3000) {
     return "medium-overflow";
   }
 
-  if (overflow < -2999) {
+  if (overflow <= -3000) {
     return "big-overflow";
   }
   return "normal-overflow";
